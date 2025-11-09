@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "The Silent Patient",
+    "author": "Alex Michaelides",
+    "genre": "Fiction"
+  },
+  {
+    "id": 2,
+    "name": "Till the last Breath",
+    "author": "Durjoy Datta",
+    "genre": "Fiction"
+  },
+  {
+    "id": 3,
+    "name": "Verity",
+    "author": "Colleen Hoover",
+    "genre": "Fiction"
+  },
+  {
+    "id": 4,
+    "name": "The Kite Runner",
+    "author": "Khaled Hosseini",
+    "genre": "Fiction"
+  }
+]

@@ -1,4 +1,4 @@
-export class Repository<T extends { id: number }> {
+export class Repository<T extends { id: number , name: string}> {
   private items: T[] = [];
 
   add(item: T): void {
@@ -11,5 +11,9 @@ export class Repository<T extends { id: number }> {
 
   findById(id: number): T | undefined {
     return this.items.find((item) => item.id === id);
+  }
+
+  findByName(name: string): T | undefined {
+    return this.items.find((item) => item.name == name);
   }
 }

@@ -1,2 +1,8 @@
 // Smrati's Task
-// export interface Member {
+import { Book } from "./Book";
+export interface Member {
+    id: number;
+    name : string;
+    email : string;
+    books : Book[];
+}
