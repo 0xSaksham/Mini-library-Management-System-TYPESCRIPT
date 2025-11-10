@@ -2,48 +2,62 @@ import { Repository } from "../repository/Repository";
 import { Book } from "../interfaces/Book";
 import { Member } from "../interfaces/Member";
 
-export class Library{
-    private booksRepo = new Repository<Book>();
-    private memebersRepo = new Repository<Member>();
+export class Library {
+  private booksRepo = new Repository<Book>();
+  private membersRepo = new Repository<Member>();
 
-    addBook(book : Book):void {
-        this.booksRepo.add(book);
+  addBook(book: Book): void {
+    // Basic validation: ensure required fields are present
+    if (!book || typeof book.id !== "number") {
+      throw new Error("Invalid book: missing or invalid 'id'");
+    }
+    if (!book.name || !book.author || !book.genre) {
+      throw new Error(
+        "Invalid book: 'name', 'author' and 'genre' are required"
+      );
     }
 
-    getAllBooks() : Book[] {
-        return this.booksRepo.getAll();
+    // Prevent duplicate IDs
+    if (this.booksRepo.findById(book.id)) {
+      throw new Error(`Book with id ${book.id} already exists`);
     }
 
-    findBook(bookId : number) : Book | undefined {
-        return this.booksRepo.findById(bookId);
-    }
+    // Store a shallow copy to avoid external mutation
+    this.booksRepo.add({ ...book });
+  }
 
-    registerMemeber(member : Member) : void {
-        this.memebersRepo.add(member);
-    }
+  getAllBooks(): Book[] {
+    return this.booksRepo.getAll();
+  }
 
-    memberDetails(memberId : number) : Member | undefined {
-        return this.memebersRepo.findById(memberId);
-    }
+  findBook(bookId: number): Book | undefined {
+    return this.booksRepo.findById(bookId);
+  }
 
-    getAllMembers() : Member[] {
-        return this.memebersRepo.getAll();
-    }
+  registerMember(member: Member): void {
+    this.membersRepo.add(member);
+  }
 
-    associateMemberToBook(bookId : number, memberId : number)
-    {
-        const book = this.booksRepo.findById(bookId);
-        const member = this.memebersRepo.findById(memberId);
+  memberDetails(memberId: number): Member | undefined {
+    return this.membersRepo.findById(memberId);
+  }
 
-        if(!book ) return "Book does not exits in the Library !!";
-        
-        if(!member) return "This member is not registered in The Library !!";
+  getAllMembers(): Member[] {
+    return this.membersRepo.getAll();
+  }
 
-        if(book.borrowedBy) return "Book is already borrowed !!";
+  associateMemberToBook(bookId: number, memberId: number) {
+    const book = this.booksRepo.findById(bookId);
+    const member = this.membersRepo.findById(memberId);
 
-        book.borrowedBy = member.id;
-        member.books.push(book);
-        return `${member.name} has borrowed "${book.name}"`;
+    if (!book) return "Book does not exits in the Library !!";
 
-    }
-} 
+    if (!member) return "This member is not registered in The Library !!";
+
+    if (book.borrowedBy) return "Book is already borrowed !!";
+
+    book.borrowedBy = member.id;
+    member.books.push(book);
+    return `${member.name} has borrowed "${book.name}"`;
+  }
+}
